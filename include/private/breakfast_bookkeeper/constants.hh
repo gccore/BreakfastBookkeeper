@@ -16,6 +16,8 @@
  * g1999raemzani@gmail.com
  */
 
+#pragma once
+
 #include <QtCore/QSize>
 //
 #include <cstdint>
@@ -25,10 +27,23 @@ namespace breakfast_bookkeeper {
 namespace constants {
 namespace ui {
 std::int32_t constexpr kSomeDefaultMargin = 2;
+std::uint32_t constexpr kMinimumYear = 1000;
+std::uint32_t constexpr kMaximumYear = 2000;
+std::uint32_t constexpr kMinimumMonth = 1;
+std::uint32_t constexpr kMaximumMonth = 12;
+std::uint32_t constexpr kMinimumDay = 1;
+std::uint32_t constexpr kMaximumDay = 31;
 QSize constexpr kMinimumSize = QSize(800, 600);
 }  // namespace ui
 namespace names {
-char const* const kApplicationName = "Breakfast Bookkeeper";
+char const* const kApplicationName = CURRENT_PROJECT_NAME;
+char const* const kApplicationVersion = CURRENT_PROJECT_VERSION;
+char const* const kApplicationOrganization = CURRENT_PROJECT_ORGANIZATION;
+char const* const kDateDisplayFormat = "yyyy-MM-dd";
+char const* const kYearLabel = "Y: ";
+char const* const kMonthLabel = "M: ";
+char const* const kDayLabel = "D: ";
+char const* const kCopyAction = "Copy Date";
 }  // namespace names
 }  // namespace constants
 }  // namespace breakfast_bookkeeper

@@ -18,38 +18,48 @@
 
 #pragma once
 
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 //
+#include <QtCore/QEvent>
+#include <QtCore/QObject>
+#include <QtCore/QPoint>
 #include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class InsertPageWidget;
+class LabeledSpinBoxWidget;
 
-class MainWindow final : public QMainWindow {
+class RawDateWidget final : public QWidget {
   Q_OBJECT
-
  public:
-  explicit MainWindow(QWidget* const parent = nullptr) noexcept;
+  explicit RawDateWidget(QWidget* const parent = nullptr) noexcept;
 
  private:
-  QPointer<QHBoxLayout> getLayout() const;
+  QPointer<QHBoxLayout> getLayout() const noexcept;
 
-  void configureApplication();
-  void configureQApplication();
+  void addAdditionalSpacer();
 
   void generateView();
-  void generateCentralWidget();
   void generateLayout();
-  void generateMainWindowDefaults();
-  void generateInsertPageWidget();
+  void generateYear();
+  void generateMonth();
+  void generateDay();
+  void generateContextMenu();
 
-  QPointer<QWidget> central_widget_;
+  Q_SLOT void onContextMenuRequested(QPoint const& point);
+  Q_SLOT void onCopyActionClicked(bool const checked);
 
-  QPointer<InsertPageWidget> insert_page_widget_;
+  QPointer<QMenu> context_menu_;
+  QPointer<QAction> copy_action_;
+  QPointer<LabeledSpinBoxWidget> year_spinbox_;
+  QPointer<LabeledSpinBoxWidget> month_spinbox_;
+  QPointer<LabeledSpinBoxWidget> day_spinbox_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

@@ -18,8 +18,9 @@
 
 #pragma once
 
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QWidget>
 //
 #include <QtCore/QPointer>
@@ -27,29 +28,21 @@
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class InsertPageWidget;
+class RawDateWidget;
 
-class MainWindow final : public QMainWindow {
+class InsertPageWidget final : public QWidget {
   Q_OBJECT
-
  public:
-  explicit MainWindow(QWidget* const parent = nullptr) noexcept;
+  explicit InsertPageWidget(QWidget* const parent = nullptr) noexcept;
 
  private:
   QPointer<QHBoxLayout> getLayout() const;
 
-  void configureApplication();
-  void configureQApplication();
-
   void generateView();
-  void generateCentralWidget();
   void generateLayout();
-  void generateMainWindowDefaults();
-  void generateInsertPageWidget();
+  void generateCurrentDay();
 
-  QPointer<QWidget> central_widget_;
-
-  QPointer<InsertPageWidget> insert_page_widget_;
+  QPointer<RawDateWidget> current_day_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

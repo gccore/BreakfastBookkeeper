@@ -18,39 +18,37 @@
 
 #pragma once
 
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 //
+#include <QtCore/QObject>
 #include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class InsertPageWidget;
 
-class MainWindow final : public QMainWindow {
+class LabeledSpinBoxWidget final : public QWidget {
   Q_OBJECT
-
  public:
-  explicit MainWindow(QWidget* const parent = nullptr) noexcept;
+  explicit LabeledSpinBoxWidget(QWidget* const parent = nullptr) noexcept;
+
+  QPointer<QSpinBox> getSpinBox() const noexcept;
+  QPointer<QLabel> getLabel() const noexcept;
 
  private:
-  QPointer<QHBoxLayout> getLayout() const;
-
-  void configureApplication();
-  void configureQApplication();
+  QPointer<QHBoxLayout> getLayout() const noexcept;
 
   void generateView();
-  void generateCentralWidget();
   void generateLayout();
-  void generateMainWindowDefaults();
-  void generateInsertPageWidget();
+  void generateSpinBox();
 
-  QPointer<QWidget> central_widget_;
-
-  QPointer<InsertPageWidget> insert_page_widget_;
+  QPointer<QSpinBox> spin_box_;
+  QPointer<QLabel> label_;
 };
+
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
 }  // namespace gccore

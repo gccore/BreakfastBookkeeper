@@ -1,5 +1,3 @@
-cmake_policy(SET CMP0100 NEW) # For *.hh, MOC
-
 set(header_dir ${PROJECT_SOURCE_DIR}/include)
 set(source_dir ${PROJECT_SOURCE_DIR}/source)
 
@@ -10,10 +8,12 @@ set(private_ui_source_dir ${source_dir}/ui)
 file(GLOB source_files
   ${source_dir}/*.cc
   ${private_ui_source_dir}/*.cc
+  ${private_ui_source_dir}/component/*.cc
 )
 file(GLOB private_header_files
   ${private_header_dir}/breakfast_bookkeeper/*.hh
   ${private_ui_header_dir}/*.hh
+  ${private_ui_header_dir}/component/*.hh
 )
 file(GLOB cmake_helper_files
   ${PROJECT_SOURCE_DIR}/cmake_helper/*.cmake

@@ -17,7 +17,10 @@
  */
 
 #include <breakfast_bookkeeper/constants.hh>
+#include <breakfast_bookkeeper/ui/insert_page_widget.hh>
 #include <breakfast_bookkeeper/ui/main_window.hh>
+//
+#include <QtWidgets/QApplication>
 //
 #include <cassert>
 
@@ -25,27 +28,51 @@ namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
 MainWindow::MainWindow(QWidget* const parent) noexcept : QMainWindow(parent) {
+  configureApplication();
   generateView();
 }
 
 QPointer<QHBoxLayout> MainWindow::getLayout() const {
-  assert(this->QMainWindow::layout() && "Layout not found");
-  return qobject_cast<QHBoxLayout*>(this->QMainWindow::layout());
+  assert(central_widget_ && "Central widget dosn't exist");
+  assert(central_widget_->layout() &&
+         "The central widget doesn't have any layout");
+  return qobject_cast<QHBoxLayout*>(central_widget_->layout());
 }
+
+void MainWindow::configureApplication() { configureQApplication(); }
+void MainWindow::configureQApplication() {
+  qApp->setApplicationName(constants::names::kApplicationName);
+  qApp->setApplicationVersion(constants::names::kApplicationVersion);
+  qApp->setOrganizationName(constants::names::kApplicationOrganization);
+}
+
 void MainWindow::generateView() {
+  generateCentralWidget();
   generateLayout();
   generateMainWindowDefaults();
+  generateInsertPageWidget();
+}
+void MainWindow::generateCentralWidget() {
+  central_widget_ = new QWidget;
+  this->QMainWindow::setCentralWidget(central_widget_);
 }
 void MainWindow::generateLayout() {
+  assert(central_widget_ && "We don't have any central widget");
+
   QPointer<QHBoxLayout> layout = new QHBoxLayout;
 
   layout->setMargin(constants::ui::kSomeDefaultMargin);
-
-  this->QMainWindow::setLayout(layout);
+  central_widget_->setLayout(layout);
 }
 void MainWindow::generateMainWindowDefaults() {
   this->QMainWindow::setWindowTitle(constants::names::kApplicationName);
   this->QMainWindow::setMinimumSize(constants::ui::kMinimumSize);
+}
+void MainWindow::generateInsertPageWidget() {
+  assert(getLayout() && "We don't have one");
+
+  insert_page_widget_ = new InsertPageWidget;
+  getLayout()->addWidget(insert_page_widget_);
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
