@@ -60,7 +60,16 @@ void InsertPageWidget::generateParticipantList() {
   LAYOUT_IS_REQUIRED();
 
   participant_list_ = new ListWidget;
+  participant_list_->getQListWidget()->setSpacing(5);
+  participant_list_->getQListWidget()->setSelectionRectVisible(false);
+  participant_list_->getQListWidget()->setSelectionMode(
+      QListWidget::NoSelection);
   getLayout()->addWidget(participant_list_);
+
+  QObject::connect(
+      participant_list_, &ListWidget::addActionClicked, this, [this] {
+        participant_list_->addWidgetItem(new QLineEdit("Testing Something"));
+      });
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

@@ -18,13 +18,30 @@
 
 #pragma once
 
-#include <cassert>
+#include <QtCore/QPointer>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QWidget>
 
-#define REQUIRED_LAYOUT_MESSAGE "We don't have one"
+namespace gccore {
+namespace breakfast_bookkeeper {
+namespace ui {
+class ListWidgetAddItemWidget final : public QWidget {
+  Q_OBJECT
+ public:
+  explicit ListWidgetAddItemWidget(QWidget* const parent = nullptr) noexcept;
 
-#define LAYOUT_IS_REQUIRED() assert(getLayout() && REQUIRED_LAYOUT_MESSAGE)
-#define QWIDGET_LAYOUT_IS_REQUIRED() \
-  assert(this->QWidget::layout() && REQUIRED_LAYOUT_MESSAGE)
-#define CONDITION
-#define ERROR_MESSAGE
-#define REQUIRED(condition, message) assert(condition&& message)
+  Q_SIGNAL void clicked();
+
+ private:
+  QPointer<QVBoxLayout> getLayout() const;
+
+  void generateView();
+  void generateLayout();
+  void generateAddButton();
+
+  QPointer<QPushButton> add_button_;
+};
+}  // namespace ui
+}  // namespace breakfast_bookkeeper
+}  // namespace gccore

@@ -18,13 +18,17 @@
 
 #pragma once
 
-#include <cassert>
-
-#define REQUIRED_LAYOUT_MESSAGE "We don't have one"
-
-#define LAYOUT_IS_REQUIRED() assert(getLayout() && REQUIRED_LAYOUT_MESSAGE)
-#define QWIDGET_LAYOUT_IS_REQUIRED() \
-  assert(this->QWidget::layout() && REQUIRED_LAYOUT_MESSAGE)
-#define CONDITION
-#define ERROR_MESSAGE
-#define REQUIRED(condition, message) assert(condition&& message)
+namespace gccore {
+namespace breakfast_bookkeeper {
+namespace utilities {
+template <typename Type>
+inline Type constexpr Column(Type&& value) noexcept {
+  return value;
+}
+template <typename Type>
+inline Type constexpr Row(Type&& value) noexcept {
+  return value;
+}
+}  // namespace utilities
+}  // namespace breakfast_bookkeeper
+}  // namespace gccore

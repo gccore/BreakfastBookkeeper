@@ -18,47 +18,41 @@
 
 #pragma once
 
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QListWidgetItem>
-#include <QtWidgets/QWidget>
-//
 #include <QtCore/QPointer>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QWidget>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class ListWidgetItemContainer;
-
-class ListWidget final : public QWidget {
+class ListWidgetItemContainer final : public QWidget {
   Q_OBJECT
 
  public:
-  enum class PositionKinds { First, Last };
+  explicit ListWidgetItemContainer(QWidget* parent = nullptr) noexcept;
 
-  explicit ListWidget(QWidget* const parent = nullptr) noexcept;
+  void setInternalWidget(QWidget* const internal_widget);
+  QPointer<QWidget> getInternalWidget() const;
 
-  QPointer<QListWidget> getQListWidget() const;
+  void setCorrespondingItem(QListWidgetItem* const item);
+  QListWidgetItem* getCorrespondingItem() const;
 
-  void addWidgetItem(QWidget* const widget_item, std::int32_t const item_row);
-  void addWidgetItem(QWidget* const widget_item,
-                     PositionKinds const position = PositionKinds::Last);
-
-  Q_SIGNAL void addActionClicked();
-  Q_SIGNAL void removeActionClicked(
-      QPointer<ListWidgetItemContainer> const item);
+  Q_SIGNAL void removeClicked(QPointer<ListWidgetItemContainer> const item);
 
  private:
-  QPointer<QHBoxLayout> getLayout() const;
+  QPointer<QGridLayout> getLayout() const;
 
   void generateView();
   void generateLayout();
-  void generateQListWidget();
-  void generateAddItem();
+  void generateRemoveButton();
 
-  std::int32_t normalizeRowIndex(std::int32_t const item_row) const noexcept;
+  Q_SLOT void onRemoveClicked();
 
-  QPointer<QListWidget> qlist_widget_;
+  QPointer<QToolButton> remove_button_;
+  QPointer<QWidget> internal_widget_;
+  QListWidgetItem* corresponding_item_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

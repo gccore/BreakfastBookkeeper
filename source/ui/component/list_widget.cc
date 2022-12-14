@@ -20,8 +20,11 @@
 //
 #include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
+#include <breakfast_bookkeeper/ui/component/list_widget_add_item_widget.hh>
+#include <breakfast_bookkeeper/ui/component/list_widget_item_container.hh>
 //
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 //
 #include <cassert>
@@ -37,15 +40,35 @@ QPointer<QListWidget> ListWidget::getQListWidget() const {
   return qlist_widget_;
 }
 
-void ListWidget::addWidgetItem(QPointer<QWidget> const& widget_item) {
+void ListWidget::addWidgetItem(QWidget* const widget_item,
+                               std::int32_t const item_row) {
   REQUIRED(CONDITION qlist_widget_,
            ERROR_MESSAGE "The QListWidget doesn't exists");
 
   if (widget_item != nullptr) {
+    QPointer<ListWidgetItemContainer> const item_container =
+        new ListWidgetItemContainer;
+    item_container->setInternalWidget(widget_item);
+    QObject::connect(item_container, &ListWidgetItemContainer::removeClicked,
+                     this, &ListWidget::removeActionClicked);
+
     QListWidgetItem* const item = new QListWidgetItem;
-    item->setSizeHint(widget_item->sizeHint());
-    qlist_widget_->addItem(item);
-    qlist_widget_->setItemWidget(item, widget_item);
+    item->setSizeHint(item_container->sizeHint());
+    item_container->setCorrespondingItem(item);
+
+    qlist_widget_->insertItem(normalizeRowIndex(item_row), item);
+    qlist_widget_->setItemWidget(item, item_container);
+  }
+}
+void ListWidget::addWidgetItem(QWidget* const widget_item,
+                               PositionKinds const position) {
+  REQUIRED(CONDITION qlist_widget_,
+           ERROR_MESSAGE "The QListWidget doesn't exists");
+
+  if (widget_item != nullptr) {
+    addWidgetItem(widget_item, PositionKinds::First == position
+                                   ? 1
+                                   : qlist_widget_->count());
   }
 }
 
@@ -57,12 +80,7 @@ QPointer<QHBoxLayout> ListWidget::getLayout() const {
 void ListWidget::generateView() {
   generateLayout();
   generateQListWidget();
-  generateSeperator();
-  generateActionsLayout();
-  generateTopActionsLayoutSpacer();
-  generateAddAction();
-  generateRemoveAction();
-  generateBottomActionsLayoutSpacer();
+  generateAddItem();
 }
 void ListWidget::generateLayout() {
   QPointer<QHBoxLayout> layout = new QHBoxLayout;
@@ -77,63 +95,22 @@ void ListWidget::generateQListWidget() {
   qlist_widget_->setVerticalScrollMode(QListWidget::ScrollPerPixel);
   getLayout()->addWidget(qlist_widget_);
 }
-void ListWidget::generateSeperator() {
-  LAYOUT_IS_REQUIRED();
+void ListWidget::generateAddItem() {
+  REQUIRED(CONDITION qlist_widget_,
+           ERROR_MESSAGE "The QListWidget object doesn't exists.");
 
-  QPointer<QFrame> horizontal_seperator = new QFrame;
-  horizontal_seperator->setFrameShape(QFrame::HLine);
-  horizontal_seperator->setLineWidth(2);
-  getLayout()->addWidget(horizontal_seperator);
-}
-void ListWidget::generateActionsLayout() {
-  LAYOUT_IS_REQUIRED();
-
-  actions_layout_ = new QVBoxLayout;
-  actions_layout_->setMargin(constants::ui::kSomeDefaultMargin);
-  getLayout()->addLayout(actions_layout_);
-}
-void ListWidget::generateTopActionsLayoutSpacer() {
-  REQUIRED(CONDITION actions_layout_,
-           ERROR_MESSAGE "We don't have the actions layout");
-
-  QSpacerItem* const spacer = new QSpacerItem(0, 1000);
-  actions_layout_->addSpacerItem(spacer);
-}
-void ListWidget::generateAddAction() {
-  REQUIRED(CONDITION actions_layout_,
-           ERROR_MESSAGE "We don't have the actions layout");
-
-  add_action_ = new QToolButton;
-  add_action_->setText(QObject::tr("+"));
-  actions_layout_->addWidget(add_action_);
-  QObject::connect(add_action_, &QToolButton::clicked, this,
-                   &ListWidget::onAddActionClicked);
-}
-void ListWidget::generateRemoveAction() {
-  REQUIRED(CONDITION actions_layout_,
-           ERROR_MESSAGE "We don't have the actions layout");
-
-  remove_action_ = new QToolButton;
-  remove_action_->setText(QObject::tr("-"));
-  actions_layout_->addWidget(remove_action_);
-  QObject::connect(remove_action_, &QToolButton::clicked, this,
-                   &ListWidget::onRemoveActionClicked);
-}
-void ListWidget::generateBottomActionsLayoutSpacer() {
-  REQUIRED(CONDITION actions_layout_,
-           ERROR_MESSAGE "We don't have the actions layout");
-
-  QSpacerItem* const spacer = new QSpacerItem(0, 1000);
-  actions_layout_->addSpacerItem(spacer);
+  QPointer<ListWidgetAddItemWidget> add_button = new ListWidgetAddItemWidget;
+  QObject::connect(add_button, &ListWidgetAddItemWidget::clicked, this,
+                   &ListWidget::addActionClicked);
+  QListWidgetItem* const item = new QListWidgetItem;
+  item->setSizeHint(add_button->sizeHint());
+  qlist_widget_->addItem(item);
+  qlist_widget_->setItemWidget(item, add_button);
 }
 
-void ListWidget::onAddActionClicked(bool const checked) {
-  Q_UNUSED(checked);
-  Q_EMIT addActionClicked();
-}
-void ListWidget::onRemoveActionClicked(bool const checked) {
-  Q_UNUSED(checked);
-  Q_EMIT removeActionClicked();
+std::int32_t ListWidget::normalizeRowIndex(
+    std::int32_t const row_index) const noexcept {
+  return row_index == 0 ? 1 : row_index;
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
