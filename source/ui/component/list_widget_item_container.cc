@@ -50,9 +50,10 @@ QListWidgetItem* ListWidgetItemContainer::getCorrespondingItem() const {
   return corresponding_item_;
 }
 
-QPointer<QGridLayout> ListWidgetItemContainer::getLayout() const {
+QPointer<ListWidgetItemContainer::Layout> ListWidgetItemContainer::getLayout()
+    const {
   QWIDGET_LAYOUT_IS_REQUIRED();
-  return qobject_cast<QGridLayout*>(this->QWidget::layout());
+  return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
 void ListWidgetItemContainer::generateView() {
@@ -60,7 +61,7 @@ void ListWidgetItemContainer::generateView() {
   generateRemoveButton();
 }
 void ListWidgetItemContainer::generateLayout() {
-  QPointer<QGridLayout> layout = new QGridLayout;
+  QPointer<Layout> layout = new Layout;
 
   layout->setMargin(0);
   this->QWidget::setLayout(layout);

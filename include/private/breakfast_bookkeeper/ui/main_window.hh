@@ -32,11 +32,13 @@ class InsertPageWidget;
 class MainWindow final : public QMainWindow {
   Q_OBJECT
 
+  using Layout = QHBoxLayout;
+
  public:
   explicit MainWindow(QWidget* const parent = nullptr) noexcept;
 
  private:
-  QPointer<QHBoxLayout> getLayout() const;
+  QPointer<Layout> getLayout() const;
 
   void configureApplication();
   void configureQApplication();

@@ -72,9 +72,9 @@ void ListWidget::addWidgetItem(QWidget* const widget_item,
   }
 }
 
-QPointer<QHBoxLayout> ListWidget::getLayout() const {
+QPointer<ListWidget::Layout> ListWidget::getLayout() const {
   QWIDGET_LAYOUT_IS_REQUIRED();
-  return qobject_cast<QHBoxLayout*>(this->QWidget::layout());
+  return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
 void ListWidget::generateView() {
@@ -83,7 +83,7 @@ void ListWidget::generateView() {
   generateAddItem();
 }
 void ListWidget::generateLayout() {
-  QPointer<QHBoxLayout> layout = new QHBoxLayout;
+  QPointer<Layout> layout = new Layout;
   layout->setMargin(constants::ui::kSomeDefaultMargin);
   this->QWidget::setLayout(layout);
 }

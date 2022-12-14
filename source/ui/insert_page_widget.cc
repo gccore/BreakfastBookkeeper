@@ -21,6 +21,7 @@
 #include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
 #include <breakfast_bookkeeper/ui/component/list_widget.hh>
+#include <breakfast_bookkeeper/ui/component/new_participate_widget.hh>
 #include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
 //
 #include <QtWidgets/QApplication>
@@ -35,9 +36,9 @@ InsertPageWidget::InsertPageWidget(QWidget* const parent) noexcept
   generateView();
 }
 
-QPointer<QVBoxLayout> InsertPageWidget::getLayout() const {
+QPointer<InsertPageWidget::Layout> InsertPageWidget::getLayout() const {
   QWIDGET_LAYOUT_IS_REQUIRED();
-  return qobject_cast<QVBoxLayout*>(this->QWidget::layout());
+  return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
 void InsertPageWidget::generateView() {
@@ -46,7 +47,7 @@ void InsertPageWidget::generateView() {
   generateParticipantList();
 }
 void InsertPageWidget::generateLayout() {
-  QPointer<QVBoxLayout> layout = new QVBoxLayout;
+  QPointer<Layout> layout = new Layout;
   layout->setMargin(constants::ui::kSomeDefaultMargin);
   this->QWidget::setLayout(layout);
 }
@@ -66,10 +67,8 @@ void InsertPageWidget::generateParticipantList() {
       QListWidget::NoSelection);
   getLayout()->addWidget(participant_list_);
 
-  QObject::connect(
-      participant_list_, &ListWidget::addActionClicked, this, [this] {
-        participant_list_->addWidgetItem(new QLineEdit("Testing Something"));
-      });
+  QObject::connect(participant_list_, &ListWidget::addActionClicked, this,
+                   [] { (new NewParticipateWidget)->show(); });
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

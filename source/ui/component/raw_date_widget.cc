@@ -20,7 +20,7 @@
 //
 #include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
-#include <breakfast_bookkeeper/ui/component/labeled_spinbox_widget.hh>
+#include <breakfast_bookkeeper/ui/component/labeled_widget.hh>
 //
 #include <QtGui/QCursor>
 #include <QtWidgets/QSpacerItem>
@@ -34,9 +34,9 @@ RawDateWidget::RawDateWidget(QWidget* const parent) noexcept : QWidget(parent) {
   generateView();
 }
 
-QPointer<QHBoxLayout> RawDateWidget::getLayout() const noexcept {
+QPointer<RawDateWidget::Layout> RawDateWidget::getLayout() const noexcept {
   QWIDGET_LAYOUT_IS_REQUIRED();
-  return qobject_cast<QHBoxLayout*>(this->QWidget::layout());
+  return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
 void RawDateWidget::addAdditionalSpacer() {
@@ -54,7 +54,7 @@ void RawDateWidget::generateView() {
   generateContextMenu();
 }
 void RawDateWidget::generateLayout() {
-  QPointer<QHBoxLayout> layout = new QHBoxLayout;
+  QPointer<Layout> layout = new Layout;
 
   layout->setMargin(constants::ui::kSomeDefaultMargin);
 
@@ -63,9 +63,9 @@ void RawDateWidget::generateLayout() {
 void RawDateWidget::generateYear() {
   LAYOUT_IS_REQUIRED();
 
-  year_spinbox_ = new LabeledSpinBoxWidget;
-  year_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumYear,
-                                        constants::ui::kMaximumYear);
+  year_spinbox_ = new LabeledWidget<QSpinBox>;
+  year_spinbox_->getWidget()->setRange(constants::ui::kMinimumYear,
+                                       constants::ui::kMaximumYear);
   year_spinbox_->getLabel()->setText(constants::names::kYearLabel);
 
   getLayout()->addWidget(year_spinbox_);
@@ -73,9 +73,9 @@ void RawDateWidget::generateYear() {
 void RawDateWidget::generateMonth() {
   LAYOUT_IS_REQUIRED();
 
-  month_spinbox_ = new LabeledSpinBoxWidget;
-  month_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumMonth,
-                                         constants::ui::kMaximumMonth);
+  month_spinbox_ = new LabeledWidget<QSpinBox>;
+  month_spinbox_->getWidget()->setRange(constants::ui::kMinimumMonth,
+                                        constants::ui::kMaximumMonth);
   month_spinbox_->getLabel()->setText(constants::names::kMonthLabel);
 
   getLayout()->addWidget(month_spinbox_);
@@ -83,9 +83,9 @@ void RawDateWidget::generateMonth() {
 void RawDateWidget::generateDay() {
   LAYOUT_IS_REQUIRED();
 
-  day_spinbox_ = new LabeledSpinBoxWidget;
-  day_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumDay,
-                                       constants::ui::kMaximumDay);
+  day_spinbox_ = new LabeledWidget<QSpinBox>;
+  day_spinbox_->getWidget()->setRange(constants::ui::kMinimumDay,
+                                      constants::ui::kMaximumDay);
   day_spinbox_->getLabel()->setText(constants::names::kDayLabel);
 
   getLayout()->addWidget(day_spinbox_);

@@ -34,12 +34,12 @@ MainWindow::MainWindow(QWidget* const parent) noexcept : QMainWindow(parent) {
   generateView();
 }
 
-QPointer<QHBoxLayout> MainWindow::getLayout() const {
+QPointer<MainWindow::Layout> MainWindow::getLayout() const {
   REQUIRED(CONDITION central_widget_,
            ERROR_MESSAGE "Centeral widget dosn't exists");
   REQUIRED(CONDITION central_widget_->layout(),
            ERROR_MESSAGE "The central widget doesn't have any layout");
-  return qobject_cast<QHBoxLayout*>(central_widget_->layout());
+  return qobject_cast<Layout*>(central_widget_->layout());
 }
 
 void MainWindow::configureApplication() { configureQApplication(); }
@@ -63,7 +63,7 @@ void MainWindow::generateLayout() {
   REQUIRED(CONDITION central_widget_,
            ERROR_MESSAGE "We don't have any central widget");
 
-  QPointer<QHBoxLayout> layout = new QHBoxLayout;
+  QPointer<Layout> layout = new Layout;
 
   layout->setMargin(constants::ui::kSomeDefaultMargin);
   central_widget_->setLayout(layout);

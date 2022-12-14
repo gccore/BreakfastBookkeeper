@@ -28,9 +28,10 @@ ListWidgetAddItemWidget::ListWidgetAddItemWidget(QWidget* const parent) noexcept
   generateView();
 }
 
-QPointer<QVBoxLayout> ListWidgetAddItemWidget::getLayout() const {
+QPointer<ListWidgetAddItemWidget::Layout> ListWidgetAddItemWidget::getLayout()
+    const {
   QWIDGET_LAYOUT_IS_REQUIRED();
-  return qobject_cast<QVBoxLayout*>(this->QWidget::layout());
+  return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
 void ListWidgetAddItemWidget::generateView() {
@@ -38,7 +39,7 @@ void ListWidgetAddItemWidget::generateView() {
   generateAddButton();
 }
 void ListWidgetAddItemWidget::generateLayout() {
-  QPointer<QVBoxLayout> layout = new QVBoxLayout;
+  QPointer<Layout> layout = new Layout;
   this->QWidget::setLayout(layout);
 }
 void ListWidgetAddItemWidget::generateAddButton() {

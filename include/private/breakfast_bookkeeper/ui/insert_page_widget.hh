@@ -18,12 +18,11 @@
 
 #pragma once
 
+#include <QtCore/QPointer>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QWidget>
-//
-#include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
@@ -33,11 +32,14 @@ class ListWidget;
 
 class InsertPageWidget final : public QWidget {
   Q_OBJECT
+
+  using Layout = QVBoxLayout;
+
  public:
   explicit InsertPageWidget(QWidget* const parent = nullptr) noexcept;
 
  private:
-  QPointer<QVBoxLayout> getLayout() const;
+  QPointer<Layout> getLayout() const;
 
   void generateView();
   void generateLayout();

@@ -30,6 +30,8 @@ namespace ui {
 class ListWidgetItemContainer final : public QWidget {
   Q_OBJECT
 
+  using Layout = QGridLayout;
+
  public:
   explicit ListWidgetItemContainer(QWidget* parent = nullptr) noexcept;
 
@@ -42,7 +44,7 @@ class ListWidgetItemContainer final : public QWidget {
   Q_SIGNAL void removeClicked(QPointer<ListWidgetItemContainer> const item);
 
  private:
-  QPointer<QGridLayout> getLayout() const;
+  QPointer<Layout> getLayout() const;
 
   void generateView();
   void generateLayout();

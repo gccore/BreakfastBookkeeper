@@ -18,53 +18,60 @@
 
 #pragma once
 
-#include <QtWidgets/QAction>
+#include <breakfast_bookkeeper/common_macros.hh>
+//
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 //
-#include <QtCore/QEvent>
 #include <QtCore/QObject>
-#include <QtCore/QPoint>
 #include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
+
 template <typename Widget>
-class LabeledWidget;
-
-class RawDateWidget final : public QWidget {
-  Q_OBJECT
-
+class LabeledWidget final : public QWidget {
+ public:
   using Layout = QHBoxLayout;
 
- public:
-  explicit RawDateWidget(QWidget* const parent = nullptr) noexcept;
+  explicit LabeledWidget(QWidget* const parent = nullptr) noexcept
+      : QWidget(parent) {
+    generateView();
+  }
+
+  QPointer<Widget> getWidget() const noexcept { return widget_; }
+  QPointer<QLabel> getLabel() const noexcept { return label_; }
 
  private:
-  QPointer<Layout> getLayout() const noexcept;
+  QPointer<Layout> getLayout() const noexcept {
+    QWIDGET_LAYOUT_IS_REQUIRED();
+    return qobject_cast<Layout*>(this->QWidget::layout());
+  }
 
-  void addAdditionalSpacer();
+  void generateView() {
+    generateLayout();
+    generateWidget();
+  }
+  void generateLayout() {
+    QPointer<Layout> layout = new Layout;
+    layout->setMargin(2);
+    this->QWidget::setLayout(layout);
+  }
+  void generateWidget() {
+    LAYOUT_IS_REQUIRED();
 
-  void generateView();
-  void generateLayout();
-  void generateYear();
-  void generateMonth();
-  void generateDay();
-  void generateContextMenu();
+    label_ = new QLabel;
+    widget_ = new Widget;
+    getLayout()->addWidget(label_);
+    getLayout()->addWidget(widget_);
+  }
 
-  Q_SLOT void onContextMenuRequested(QPoint const& point);
-  Q_SLOT void onCopyActionClicked(bool const checked);
-
-  QPointer<QMenu> context_menu_;
-  QPointer<QAction> copy_action_;
-  QPointer<LabeledWidget<QSpinBox>> year_spinbox_;
-  QPointer<LabeledWidget<QSpinBox>> month_spinbox_;
-  QPointer<LabeledWidget<QSpinBox>> day_spinbox_;
+  QPointer<Widget> widget_;
+  QPointer<QLabel> label_;
 };
+
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
 }  // namespace gccore

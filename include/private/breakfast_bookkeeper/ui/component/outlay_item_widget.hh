@@ -18,37 +18,46 @@
 
 #pragma once
 
-#include <QtWidgets/QLabel>
+#include <QtCore/QPointer>
+#include <QtCore/QString>
 #include <QtWidgets/QLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 //
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
+#include <cstdint>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
+template <typename Widget>
+class LabeledWidget;
 
-class LabeledSpinBoxWidget final : public QWidget {
+class OutlayItemWidget final : public QWidget {
   Q_OBJECT
- public:
-  explicit LabeledSpinBoxWidget(QWidget* const parent = nullptr) noexcept;
 
-  QPointer<QSpinBox> getSpinBox() const noexcept;
-  QPointer<QLabel> getLabel() const noexcept;
+  using Layout = QHBoxLayout;
+
+ public:
+  explicit OutlayItemWidget(QWidget* const parent = nullptr) noexcept;
+
+  void setCost(std::int32_t const cost);
+  std::int32_t getCost() const;
+
+  void setDescription(QString const& description);
+  QString getDescription() const;
 
  private:
-  QPointer<QHBoxLayout> getLayout() const noexcept;
+  QPointer<Layout> getLayout() const;
 
   void generateView();
   void generateLayout();
-  void generateSpinBox();
+  void generateCost();
+  void generateDescription();
 
-  QPointer<QSpinBox> spin_box_;
-  QPointer<QLabel> label_;
+  QPointer<LabeledWidget<QSpinBox>> cost_;
+  QPointer<LabeledWidget<QLineEdit>> description_;
 };
-
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
 }  // namespace gccore

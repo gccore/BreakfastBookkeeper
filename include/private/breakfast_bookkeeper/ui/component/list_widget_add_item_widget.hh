@@ -28,13 +28,16 @@ namespace breakfast_bookkeeper {
 namespace ui {
 class ListWidgetAddItemWidget final : public QWidget {
   Q_OBJECT
+
+  using Layout = QVBoxLayout;
+
  public:
   explicit ListWidgetAddItemWidget(QWidget* const parent = nullptr) noexcept;
 
   Q_SIGNAL void clicked();
 
  private:
-  QPointer<QVBoxLayout> getLayout() const;
+  QPointer<Layout> getLayout() const;
 
   void generateView();
   void generateLayout();

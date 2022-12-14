@@ -18,49 +18,45 @@
 
 #pragma once
 
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QListWidgetItem>
-#include <QtWidgets/QWidget>
-//
 #include <QtCore/QPointer>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QWidget>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
+template <typename Widget>
+class LabeledWidget;
+class ListWidget;
 class ListWidgetItemContainer;
 
-class ListWidget final : public QWidget {
+class NewParticipateWidget final : public QWidget {
   Q_OBJECT
 
-  using Layout = QHBoxLayout;
+  using Layout = QVBoxLayout;
 
  public:
-  enum class PositionKinds { First, Last };
-
-  explicit ListWidget(QWidget* const parent = nullptr) noexcept;
-
-  QPointer<QListWidget> getQListWidget() const;
-
-  void addWidgetItem(QWidget* const widget_item, std::int32_t const item_row);
-  void addWidgetItem(QWidget* const widget_item,
-                     PositionKinds const position = PositionKinds::Last);
-
-  Q_SIGNAL void addActionClicked();
-  Q_SIGNAL void removeActionClicked(
-      QPointer<ListWidgetItemContainer> const item);
+  explicit NewParticipateWidget(QWidget* parent = nullptr) noexcept;
 
  private:
   QPointer<Layout> getLayout() const;
 
+  void configure();
+  void configureQWidget();
+
   void generateView();
   void generateLayout();
-  void generateQListWidget();
-  void generateAddItem();
+  void generateParticipateName();
+  void generateOutlayList();
 
-  std::int32_t normalizeRowIndex(std::int32_t const item_row) const noexcept;
+  Q_SLOT void onOutlayListAddClicked();
+  Q_SLOT void onOutlayListRemoveClicked(
+      QPointer<ListWidgetItemContainer> const item);
 
-  QPointer<QListWidget> qlist_widget_;
+  QPointer<LabeledWidget<QLineEdit>> participate_name_;
+  QPointer<ListWidget> outlay_list_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
