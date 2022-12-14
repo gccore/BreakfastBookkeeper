@@ -29,6 +29,7 @@ namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
 class RawDateWidget;
+class ListWidget;
 
 class InsertPageWidget final : public QWidget {
   Q_OBJECT
@@ -36,13 +37,15 @@ class InsertPageWidget final : public QWidget {
   explicit InsertPageWidget(QWidget* const parent = nullptr) noexcept;
 
  private:
-  QPointer<QHBoxLayout> getLayout() const;
+  QPointer<QVBoxLayout> getLayout() const;
 
   void generateView();
   void generateLayout();
   void generateCurrentDay();
+  void generateParticipantList();
 
   QPointer<RawDateWidget> current_day_;
+  QPointer<ListWidget> participant_list_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

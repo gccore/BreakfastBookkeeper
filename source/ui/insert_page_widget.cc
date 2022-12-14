@@ -16,9 +16,12 @@
  * g1999raemzani@gmail.com
  */
 
-#include <breakfast_bookkeeper/constants.hh>
-#include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
 #include <breakfast_bookkeeper/ui/insert_page_widget.hh>
+//
+#include <breakfast_bookkeeper/common_macros.hh>
+#include <breakfast_bookkeeper/constants.hh>
+#include <breakfast_bookkeeper/ui/component/list_widget.hh>
+#include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
 //
 #include <QtWidgets/QApplication>
 //
@@ -32,25 +35,32 @@ InsertPageWidget::InsertPageWidget(QWidget* const parent) noexcept
   generateView();
 }
 
-QPointer<QHBoxLayout> InsertPageWidget::getLayout() const {
-  assert(this->QWidget::layout() && "We don't have one");
-  return qobject_cast<QHBoxLayout*>(this->QWidget::layout());
+QPointer<QVBoxLayout> InsertPageWidget::getLayout() const {
+  QWIDGET_LAYOUT_IS_REQUIRED();
+  return qobject_cast<QVBoxLayout*>(this->QWidget::layout());
 }
 
 void InsertPageWidget::generateView() {
   generateLayout();
   generateCurrentDay();
+  generateParticipantList();
 }
 void InsertPageWidget::generateLayout() {
-  QPointer<QHBoxLayout> layout = new QHBoxLayout;
+  QPointer<QVBoxLayout> layout = new QVBoxLayout;
   layout->setMargin(constants::ui::kSomeDefaultMargin);
   this->QWidget::setLayout(layout);
 }
 void InsertPageWidget::generateCurrentDay() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   current_day_ = new RawDateWidget;
   getLayout()->addWidget(current_day_);
+}
+void InsertPageWidget::generateParticipantList() {
+  LAYOUT_IS_REQUIRED();
+
+  participant_list_ = new ListWidget;
+  getLayout()->addWidget(participant_list_);
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

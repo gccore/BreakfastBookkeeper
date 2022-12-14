@@ -16,9 +16,11 @@
  * g1999raemzani@gmail.com
  */
 
+#include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
+//
+#include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
 #include <breakfast_bookkeeper/ui/component/labeled_spinbox_widget.hh>
-#include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
 //
 #include <QtGui/QCursor>
 #include <QtWidgets/QSpacerItem>
@@ -33,13 +35,13 @@ RawDateWidget::RawDateWidget(QWidget* const parent) noexcept : QWidget(parent) {
 }
 
 QPointer<QHBoxLayout> RawDateWidget::getLayout() const noexcept {
-  assert(this->QWidget::layout() && "We don't have one");
+  QWIDGET_LAYOUT_IS_REQUIRED();
   return qobject_cast<QHBoxLayout*>(this->QWidget::layout());
 }
 
 void RawDateWidget::addAdditionalSpacer() {
-  assert(getLayout() && "We don't have one");
-  getLayout()->addSpacerItem(new QSpacerItem(1000, 1000));
+  LAYOUT_IS_REQUIRED();
+  getLayout()->addSpacerItem(new QSpacerItem(1000, 0));
 }
 
 void RawDateWidget::generateView() {
@@ -59,35 +61,32 @@ void RawDateWidget::generateLayout() {
   this->QWidget::setLayout(layout);
 }
 void RawDateWidget::generateYear() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   year_spinbox_ = new LabeledSpinBoxWidget;
   year_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumYear,
                                         constants::ui::kMaximumYear);
   year_spinbox_->getLabel()->setText(constants::names::kYearLabel);
-  year_spinbox_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   getLayout()->addWidget(year_spinbox_);
 }
 void RawDateWidget::generateMonth() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   month_spinbox_ = new LabeledSpinBoxWidget;
   month_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumMonth,
                                          constants::ui::kMaximumMonth);
   month_spinbox_->getLabel()->setText(constants::names::kMonthLabel);
-  month_spinbox_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   getLayout()->addWidget(month_spinbox_);
 }
 void RawDateWidget::generateDay() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   day_spinbox_ = new LabeledSpinBoxWidget;
   day_spinbox_->getSpinBox()->setRange(constants::ui::kMinimumDay,
                                        constants::ui::kMaximumDay);
   day_spinbox_->getLabel()->setText(constants::names::kDayLabel);
-  day_spinbox_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   getLayout()->addWidget(day_spinbox_);
 }
@@ -105,7 +104,9 @@ void RawDateWidget::generateContextMenu() {
 }
 
 void RawDateWidget::onContextMenuRequested(QPoint const& point) {
-  assert(context_menu_ && "We don't have any initialized QMenu");
+  REQUIRED(CONDITION context_menu_,
+           ERROR_MESSAGE "We don't have any initialized QMenu");
+
   context_menu_->popup(this->QWidget::mapToGlobal(point));
 }
 void RawDateWidget::onCopyActionClicked(bool const checked) {

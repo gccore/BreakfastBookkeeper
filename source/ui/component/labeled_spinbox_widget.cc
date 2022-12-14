@@ -16,8 +16,10 @@
  * g1999raemzani@gmail.com
  */
 
-#include <breakfast_bookkeeper/constants.hh>
 #include <breakfast_bookkeeper/ui/component/labeled_spinbox_widget.hh>
+//
+#include <breakfast_bookkeeper/common_macros.hh>
+#include <breakfast_bookkeeper/constants.hh>
 //
 #include <cassert>
 
@@ -37,7 +39,7 @@ QPointer<QLabel> LabeledSpinBoxWidget::getLabel() const noexcept {
 }
 
 QPointer<QHBoxLayout> LabeledSpinBoxWidget::getLayout() const noexcept {
-  assert(this->QWidget::layout() && "We don't have one");
+  QWIDGET_LAYOUT_IS_REQUIRED();
   return qobject_cast<QHBoxLayout *>(this->QWidget::layout());
 }
 
@@ -53,7 +55,7 @@ void LabeledSpinBoxWidget::generateLayout() {
   this->QWidget::setLayout(layout);
 }
 void LabeledSpinBoxWidget::generateSpinBox() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   label_ = new QLabel;
   spin_box_ = new QSpinBox;

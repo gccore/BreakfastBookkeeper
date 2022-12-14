@@ -16,9 +16,11 @@
  * g1999raemzani@gmail.com
  */
 
+#include <breakfast_bookkeeper/ui/main_window.hh>
+//
+#include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
 #include <breakfast_bookkeeper/ui/insert_page_widget.hh>
-#include <breakfast_bookkeeper/ui/main_window.hh>
 //
 #include <QtWidgets/QApplication>
 //
@@ -33,9 +35,10 @@ MainWindow::MainWindow(QWidget* const parent) noexcept : QMainWindow(parent) {
 }
 
 QPointer<QHBoxLayout> MainWindow::getLayout() const {
-  assert(central_widget_ && "Central widget dosn't exist");
-  assert(central_widget_->layout() &&
-         "The central widget doesn't have any layout");
+  REQUIRED(CONDITION central_widget_,
+           ERROR_MESSAGE "Centeral widget dosn't exists");
+  REQUIRED(CONDITION central_widget_->layout(),
+           ERROR_MESSAGE "The central widget doesn't have any layout");
   return qobject_cast<QHBoxLayout*>(central_widget_->layout());
 }
 
@@ -57,7 +60,8 @@ void MainWindow::generateCentralWidget() {
   this->QMainWindow::setCentralWidget(central_widget_);
 }
 void MainWindow::generateLayout() {
-  assert(central_widget_ && "We don't have any central widget");
+  REQUIRED(CONDITION central_widget_,
+           ERROR_MESSAGE "We don't have any central widget");
 
   QPointer<QHBoxLayout> layout = new QHBoxLayout;
 
@@ -69,7 +73,7 @@ void MainWindow::generateMainWindowDefaults() {
   this->QMainWindow::setMinimumSize(constants::ui::kMinimumSize);
 }
 void MainWindow::generateInsertPageWidget() {
-  assert(getLayout() && "We don't have one");
+  LAYOUT_IS_REQUIRED();
 
   insert_page_widget_ = new InsertPageWidget;
   getLayout()->addWidget(insert_page_widget_);

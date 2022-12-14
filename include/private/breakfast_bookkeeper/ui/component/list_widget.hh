@@ -19,7 +19,9 @@
 #pragma once
 
 #include <QtWidgets/QLayout>
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 //
 #include <QtCore/QPointer>
@@ -27,28 +29,41 @@
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class InsertPageWidget;
-
-class MainWindow final : public QMainWindow {
+class ListWidget final : public QWidget {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* const parent = nullptr) noexcept;
+  explicit ListWidget(QWidget* const parent = nullptr) noexcept;
+
+  QPointer<QListWidget> getQListWidget() const;
+
+  void addWidgetItem(QPointer<QWidget> const& widget_item);
+
+  Q_SIGNAL void addActionClicked();
+  Q_SIGNAL void removeActionClicked();
+  Q_SIGNAL void itemAdded(QPointer<QListWidgetItem> const& new_item);
+  Q_SIGNAL void itemRemoved();
 
  private:
   QPointer<QHBoxLayout> getLayout() const;
 
-  void configureApplication();
-  void configureQApplication();
-
   void generateView();
-  void generateCentralWidget();
   void generateLayout();
-  void generateMainWindowDefaults();
-  void generateInsertPageWidget();
+  void generateQListWidget();
+  void generateSeperator();
+  void generateActionsLayout();
+  void generateTopActionsLayoutSpacer();
+  void generateAddAction();
+  void generateRemoveAction();
+  void generateBottomActionsLayoutSpacer();
 
-  QPointer<QWidget> central_widget_;
-  QPointer<InsertPageWidget> insert_page_widget_;
+  Q_SLOT void onAddActionClicked(bool const checked);
+  Q_SLOT void onRemoveActionClicked(bool const checkedS);
+
+  QPointer<QListWidget> qlist_widget_;
+  QPointer<QVBoxLayout> actions_layout_;
+  QPointer<QToolButton> add_action_;
+  QPointer<QToolButton> remove_action_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
