@@ -67,8 +67,11 @@ void InsertPageWidget::generateParticipantList() {
       QListWidget::NoSelection);
   getLayout()->addWidget(participant_list_);
 
-  QObject::connect(participant_list_, &ListWidget::addActionClicked, this,
-                   [] { (new NewParticipateWidget)->show(); });
+  QObject::connect(participant_list_, &ListWidget::addActionClicked, this, [] {
+    NewParticipateWidget* const new_participate = new NewParticipateWidget;
+    new_participate->setWindowModality(Qt::ApplicationModal);
+    new_participate->show();
+  });
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
