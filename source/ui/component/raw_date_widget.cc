@@ -23,7 +23,6 @@
 #include <breakfast_bookkeeper/ui/component/labeled_widget.hh>
 //
 #include <QtGui/QCursor>
-#include <QtWidgets/QSpacerItem>
 //
 #include <cassert>
 
@@ -39,18 +38,11 @@ QPointer<RawDateWidget::Layout> RawDateWidget::getLayout() const noexcept {
   return qobject_cast<Layout*>(this->QWidget::layout());
 }
 
-void RawDateWidget::addAdditionalSpacer() {
-  LAYOUT_IS_REQUIRED();
-  getLayout()->addSpacerItem(new QSpacerItem(1000, 0));
-}
-
 void RawDateWidget::generateView() {
   generateLayout();
-  addAdditionalSpacer();
   generateYear();
   generateMonth();
   generateDay();
-  addAdditionalSpacer();
   generateContextMenu();
 }
 void RawDateWidget::generateLayout() {

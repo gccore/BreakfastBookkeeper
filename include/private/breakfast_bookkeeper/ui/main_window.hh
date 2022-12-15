@@ -18,11 +18,11 @@
 
 #pragma once
 
+#include <QtCore/QPointer>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMdiArea>
 #include <QtWidgets/QWidget>
-//
-#include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
@@ -38,18 +38,15 @@ class MainWindow final : public QMainWindow {
   explicit MainWindow(QWidget* const parent = nullptr) noexcept;
 
  private:
-  QPointer<Layout> getLayout() const;
-
   void configureApplication();
   void configureQApplication();
 
   void generateView();
   void generateCentralWidget();
-  void generateLayout();
   void generateMainWindowDefaults();
   void generateInsertPageWidget();
 
-  QPointer<QWidget> central_widget_;
+  QPointer<QMdiArea> central_widget_;
   QPointer<InsertPageWidget> insert_page_widget_;
 };
 }  // namespace ui

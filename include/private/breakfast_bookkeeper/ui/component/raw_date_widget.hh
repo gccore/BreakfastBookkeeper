@@ -18,17 +18,16 @@
 
 #pragma once
 
+#include <QtCore/QEvent>
+#include <QtCore/QObject>
+#include <QtCore/QPoint>
+#include <QtCore/QPointer>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
-//
-#include <QtCore/QEvent>
-#include <QtCore/QObject>
-#include <QtCore/QPoint>
-#include <QtCore/QPointer>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
@@ -46,8 +45,6 @@ class RawDateWidget final : public QWidget {
 
  private:
   QPointer<Layout> getLayout() const noexcept;
-
-  void addAdditionalSpacer();
 
   void generateView();
   void generateLayout();

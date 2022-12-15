@@ -34,14 +34,6 @@ MainWindow::MainWindow(QWidget* const parent) noexcept : QMainWindow(parent) {
   generateView();
 }
 
-QPointer<MainWindow::Layout> MainWindow::getLayout() const {
-  REQUIRED(CONDITION central_widget_,
-           ERROR_MESSAGE "Centeral widget dosn't exists");
-  REQUIRED(CONDITION central_widget_->layout(),
-           ERROR_MESSAGE "The central widget doesn't have any layout");
-  return qobject_cast<Layout*>(central_widget_->layout());
-}
-
 void MainWindow::configureApplication() { configureQApplication(); }
 void MainWindow::configureQApplication() {
   qApp->setApplicationName(constants::names::kApplicationName);
@@ -51,32 +43,23 @@ void MainWindow::configureQApplication() {
 
 void MainWindow::generateView() {
   generateCentralWidget();
-  generateLayout();
   generateMainWindowDefaults();
   generateInsertPageWidget();
 }
 void MainWindow::generateCentralWidget() {
-  central_widget_ = new QWidget;
+  central_widget_ = new QMdiArea;
   this->QMainWindow::setCentralWidget(central_widget_);
-}
-void MainWindow::generateLayout() {
-  REQUIRED(CONDITION central_widget_,
-           ERROR_MESSAGE "We don't have any central widget");
-
-  QPointer<Layout> layout = new Layout;
-
-  layout->setMargin(constants::ui::kSomeDefaultMargin);
-  central_widget_->setLayout(layout);
 }
 void MainWindow::generateMainWindowDefaults() {
   this->QMainWindow::setWindowTitle(constants::names::kApplicationName);
   this->QMainWindow::setMinimumSize(constants::ui::kMinimumSize);
 }
 void MainWindow::generateInsertPageWidget() {
-  LAYOUT_IS_REQUIRED();
+  REQUIRED(CONDITION central_widget_,
+           ERROR_MESSAGE "The central widget doesn't exists");
 
   insert_page_widget_ = new InsertPageWidget;
-  getLayout()->addWidget(insert_page_widget_);
+  central_widget_->addSubWindow(insert_page_widget_);
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

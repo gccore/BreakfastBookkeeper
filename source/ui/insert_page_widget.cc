@@ -25,6 +25,7 @@
 #include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
 //
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QSpacerItem>
 //
 #include <cassert>
 
@@ -55,7 +56,14 @@ void InsertPageWidget::generateCurrentDay() {
   LAYOUT_IS_REQUIRED();
 
   current_day_ = new RawDateWidget;
-  getLayout()->addWidget(current_day_);
+  current_day_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+  QHBoxLayout* const layout = new QHBoxLayout;
+  layout->addSpacerItem(new QSpacerItem(100, 0));
+  layout->addWidget(current_day_);
+  layout->addSpacerItem(new QSpacerItem(100, 0));
+
+  getLayout()->addLayout(layout, Qt::AlignCenter);
 }
 void InsertPageWidget::generateParticipantList() {
   LAYOUT_IS_REQUIRED();
