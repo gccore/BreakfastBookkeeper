@@ -22,7 +22,10 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
+//
+#include <cstdint>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
@@ -40,6 +43,8 @@ class NewParticipateWidget final : public QWidget {
  public:
   explicit NewParticipateWidget(QWidget* parent = nullptr) noexcept;
 
+  std::uint8_t getExitCode() const;
+
  private:
   QPointer<Layout> getLayout() const;
 
@@ -50,13 +55,19 @@ class NewParticipateWidget final : public QWidget {
   void generateLayout();
   void generateParticipateName();
   void generateOutlayList();
+  void generateApplyCancelButtons();
 
   Q_SLOT void onOutlayListAddClicked();
   Q_SLOT void onOutlayListRemoveClicked(
       QPointer<ListWidgetItemContainer> const item);
+  Q_SLOT void onApplyClicked();
+  Q_SLOT void onCancelClicked();
 
   QPointer<LabeledWidget<QLineEdit>> participate_name_;
   QPointer<ListWidget> outlay_list_;
+  QPointer<QPushButton> apply_button_;
+  QPointer<QPushButton> cancel_button_;
+  std::uint8_t exit_code_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

@@ -25,16 +25,19 @@
 #include <breakfast_bookkeeper/ui/component/outlay_item_widget.hh>
 //
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QSpacerItem>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
 
 NewParticipateWidget::NewParticipateWidget(QWidget* parent) noexcept
-    : QWidget(parent) {
+    : QWidget(parent), exit_code_(EXIT_FAILURE) {
   configure();
   generateView();
 }
+
+std::uint8_t NewParticipateWidget::getExitCode() const { return exit_code_; }
 
 QPointer<NewParticipateWidget::Layout> NewParticipateWidget::getLayout() const {
   QWIDGET_LAYOUT_IS_REQUIRED();
@@ -50,11 +53,12 @@ void NewParticipateWidget::generateView() {
   generateLayout();
   generateParticipateName();
   generateOutlayList();
+  generateApplyCancelButtons();
 }
 void NewParticipateWidget::generateLayout() {
   QPointer<Layout> layout = new Layout;
   this->QWidget::setLayout(layout);
-  this->QWidget::resize(QSize(500, 300));
+  this->QWidget::resize(QSize(600, 400));
 }
 void NewParticipateWidget::generateParticipateName() {
   LAYOUT_IS_REQUIRED();
@@ -86,6 +90,28 @@ void NewParticipateWidget::generateOutlayList() {
 
   getLayout()->addWidget(groupbox);
 }
+void NewParticipateWidget::generateApplyCancelButtons() {
+  LAYOUT_IS_REQUIRED();
+
+  apply_button_ = new QPushButton(QObject::tr("Apply"));
+  cancel_button_ = new QPushButton(QObject::tr("Cacnel"));
+
+  QObject::connect(apply_button_, &QPushButton::clicked, this,
+                   &NewParticipateWidget::onApplyClicked);
+  QObject::connect(cancel_button_, &QPushButton::clicked, this,
+                   &NewParticipateWidget::onCancelClicked);
+
+  QHBoxLayout* const layout = new QHBoxLayout;
+  QSpacerItem* const left_spacer = new QSpacerItem(100, 0);
+  QSpacerItem* const right_spacer = new QSpacerItem(100, 0);
+
+  layout->addSpacerItem(left_spacer);
+  layout->addWidget(apply_button_);
+  layout->addWidget(cancel_button_);
+  layout->addSpacerItem(right_spacer);
+
+  getLayout()->addLayout(layout);
+}
 
 void NewParticipateWidget::onOutlayListAddClicked() {
   REQUIRED(CONDITION outlay_list_,
@@ -95,7 +121,26 @@ void NewParticipateWidget::onOutlayListAddClicked() {
 void NewParticipateWidget::onOutlayListRemoveClicked(
     QPointer<ListWidgetItemContainer> const item) {
   REQUIRED(CONDITION outlay_list_,
-           ERROR_MESSAGE "The outlay list object doesn't exist.");
+           ERROR_MESSAGE "The outlay-list object doesn't exist.");
+  REQUIRED(CONDITION outlay_list_->getQListWidget(),
+           ERROR_MESSAGE "The outlay-list's internal object doesn't exists");
+  REQUIRED(CONDITION item->getInternalWidget(),
+           ERROR_MESSAGE "The remove reqested item doesn't have a widget");
+
+  QListWidget* const qlist_widget = outlay_list_->getQListWidget();
+  QListWidgetItem* const corresponding_item = item->getCorrespondingItem();
+
+  qlist_widget->removeItemWidget(corresponding_item);
+  delete qlist_widget->takeItem(qlist_widget->row(corresponding_item));
+  item->getInternalWidget()->deleteLater();
+}
+void NewParticipateWidget::onApplyClicked() {
+  exit_code_ = EXIT_SUCCESS;
+  this->QWidget::close();
+}
+void NewParticipateWidget::onCancelClicked() {
+  exit_code_ = EXIT_FAILURE;
+  this->QWidget::close();
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

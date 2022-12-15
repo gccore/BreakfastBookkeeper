@@ -20,6 +20,8 @@
 //
 #include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/ui/component/labeled_widget.hh>
+//
+#include <limits>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
@@ -71,6 +73,8 @@ void OutlayItemWidget::generateCost() {
 
   cost_ = new LabeledWidget<QSpinBox>;
   cost_->getLabel()->setText(QObject::tr("Cost: "));
+  cost_->getWidget()->setMaximum(std::numeric_limits<int>::max());
+  cost_->getWidget()->setMinimum(0);
   getLayout()->addWidget(cost_);
 }
 void OutlayItemWidget::generateDescription() {
