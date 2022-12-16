@@ -18,16 +18,21 @@
 
 #pragma once
 
+#include <QtCore/QPoint>
 #include <QtCore/QPointer>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QWidget>
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
 class InsertPageWidget;
+template <typename Widget>
+class MdiSubWindow;
 
 class MainWindow final : public QMainWindow {
   Q_OBJECT
@@ -45,9 +50,16 @@ class MainWindow final : public QMainWindow {
   void generateCentralWidget();
   void generateMainWindowDefaults();
   void generateInsertPageWidget();
+  void generateMdiAreaMenu();
+  void generateInsertPageAction();
+
+  Q_SLOT void onContextMenuRequested(QPoint const& point);
+  Q_SLOT void onInsertPageActionTriggered(bool const checked);
 
   QPointer<QMdiArea> central_widget_;
-  QPointer<InsertPageWidget> insert_page_widget_;
+  QPointer<MdiSubWindow<InsertPageWidget>> insert_page_widget_;
+  QPointer<QMenu> mdi_area_menu_;
+  QPointer<QAction> insert_page_action_;
 };
 }  // namespace ui
 }  // namespace breakfast_bookkeeper

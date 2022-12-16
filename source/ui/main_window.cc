@@ -20,6 +20,7 @@
 //
 #include <breakfast_bookkeeper/common_macros.hh>
 #include <breakfast_bookkeeper/constants.hh>
+#include <breakfast_bookkeeper/ui/component/mdi_sub_window.hh>
 #include <breakfast_bookkeeper/ui/insert_page_widget.hh>
 //
 #include <QtWidgets/QApplication>
@@ -45,6 +46,8 @@ void MainWindow::generateView() {
   generateCentralWidget();
   generateMainWindowDefaults();
   generateInsertPageWidget();
+  generateMdiAreaMenu();
+  generateInsertPageAction();
 }
 void MainWindow::generateCentralWidget() {
   central_widget_ = new QMdiArea;
@@ -55,11 +58,48 @@ void MainWindow::generateMainWindowDefaults() {
   this->QMainWindow::setMinimumSize(constants::ui::kMinimumSize);
 }
 void MainWindow::generateInsertPageWidget() {
+  insert_page_widget_ = new MdiSubWindow<InsertPageWidget>;
+}
+void MainWindow::generateMdiAreaMenu() {
+  REQUIRED(CONDITION central_widget_,
+           ERROR_MESSAGE "The centeral widget object doesn't exists");
+
+  mdi_area_menu_ = new QMenu;
+  central_widget_->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  QObject::connect(central_widget_, &QMdiArea::customContextMenuRequested, this,
+                   &MainWindow::onContextMenuRequested);
+}
+void MainWindow::generateInsertPageAction() {
+  REQUIRED(CONDITION mdi_area_menu_,
+           ERROR_MESSAGE "The QMenu object doesn't exists");
+
+  QAction* const action = new QAction(QObject::tr("Insert Page"), nullptr);
+  QObject::connect(action, &QAction::triggered, this,
+                   &MainWindow::onInsertPageActionTriggered);
+
+  mdi_area_menu_->addAction(action);
+}
+
+void MainWindow::onContextMenuRequested(QPoint const& point) {
+  REQUIRED(CONDITION mdi_area_menu_,
+           ERROR_MESSAGE "The QMenu object doesn't exists");
+
+  mdi_area_menu_->popup(this->QMainWindow::mapToGlobal(point));
+}
+void MainWindow::onInsertPageActionTriggered(bool const checked) {
+  Q_UNUSED(checked);
+
+  REQUIRED(CONDITION insert_page_widget_,
+           ERROR_MESSAGE "The InsertPageWidget object doesn't exists");
   REQUIRED(CONDITION central_widget_,
            ERROR_MESSAGE "The central widget doesn't exists");
 
-  insert_page_widget_ = new InsertPageWidget;
-  central_widget_->addSubWindow(insert_page_widget_);
+  if (central_widget_->subWindowList().indexOf(insert_page_widget_) == -1) {
+    central_widget_->addSubWindow(insert_page_widget_)->showNormal();
+  } else {
+    insert_page_widget_->showNormal();
+  }
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
