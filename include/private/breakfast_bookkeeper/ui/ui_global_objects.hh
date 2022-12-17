@@ -18,39 +18,14 @@
 
 #pragma once
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QWidget>
+class QMdiArea;
 
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
-class RawDateWidget;
-class ListWidget;
-
-class InsertPageWidget final : public QWidget {
-  Q_OBJECT
-
-  using Layout = QVBoxLayout;
-
- public:
-  explicit InsertPageWidget(QWidget* const parent = nullptr) noexcept;
-
- private:
-  QPointer<Layout> getLayout() const;
-
-  void generateView();
-  void generateLayout();
-  void generateCurrentDay();
-  void generateParticipantList();
-
-  Q_SLOT void onParticipateListAddActionClicked();
-
-  QPointer<RawDateWidget> current_day_;
-  QPointer<ListWidget> participant_list_;
-};
+namespace global_objects {
+extern QMdiArea* MdiArea;
+}  // namespace global_objects
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
 }  // namespace gccore

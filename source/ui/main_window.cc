@@ -22,6 +22,7 @@
 #include <breakfast_bookkeeper/constants.hh>
 #include <breakfast_bookkeeper/ui/component/mdi_sub_window.hh>
 #include <breakfast_bookkeeper/ui/insert_page_widget.hh>
+#include <breakfast_bookkeeper/ui/ui_global_objects.hh>
 //
 #include <QtWidgets/QApplication>
 //
@@ -30,6 +31,15 @@
 namespace gccore {
 namespace breakfast_bookkeeper {
 namespace ui {
+
+///
+/// @namespace global_objects
+/// @see breakfast_bookkeepr/ui/ui_global_object.hh
+///
+namespace global_objects {
+QMdiArea* MdiArea = nullptr;
+}  // namespace global_objects
+
 MainWindow::MainWindow(QWidget* const parent) noexcept : QMainWindow(parent) {
   configureApplication();
   generateView();
@@ -51,6 +61,7 @@ void MainWindow::generateView() {
 }
 void MainWindow::generateCentralWidget() {
   central_widget_ = new QMdiArea;
+  global_objects::MdiArea = central_widget_;
   this->QMainWindow::setCentralWidget(central_widget_);
 }
 void MainWindow::generateMainWindowDefaults() {

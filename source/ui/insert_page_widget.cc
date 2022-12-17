@@ -23,8 +23,11 @@
 #include <breakfast_bookkeeper/ui/component/list_widget.hh>
 #include <breakfast_bookkeeper/ui/component/new_participate_widget.hh>
 #include <breakfast_bookkeeper/ui/component/raw_date_widget.hh>
+#include <breakfast_bookkeeper/ui/ui_global_objects.hh>
 //
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QSpacerItem>
 //
 #include <cassert>
@@ -75,11 +78,14 @@ void InsertPageWidget::generateParticipantList() {
       QListWidget::NoSelection);
   getLayout()->addWidget(participant_list_);
 
-  QObject::connect(participant_list_, &ListWidget::addActionClicked, this, [] {
-    NewParticipateWidget* const new_participate = new NewParticipateWidget;
-    new_participate->setWindowModality(Qt::ApplicationModal);
-    new_participate->show();
-  });
+  QObject::connect(participant_list_, &ListWidget::addActionClicked, this,
+                   &InsertPageWidget::onParticipateListAddActionClicked);
+}
+void InsertPageWidget::onParticipateListAddActionClicked() {
+  REQUIRED(CONDITION global_objects::MdiArea,
+           ERROR_MESSAGE "We need the MDI Area");
+  NewParticipateWidget* const new_participate = new NewParticipateWidget;
+  global_objects::MdiArea->addSubWindow(new_participate)->showNormal();
 }
 }  // namespace ui
 }  // namespace breakfast_bookkeeper
